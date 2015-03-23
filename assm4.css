@@ -1,0 +1,131 @@
+body
+{
+	background-image: url("background.jpg");
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+div#menu {
+	width:1100px;
+	margin-left:100px;
+	background-color:#D21309;
+	border-width:1px;
+	border-style:solid;
+	border-color:#444444;
+	padding:10px;
+	font-weight:bold;
+	color:#000000;
+	text-decoration:none;
+	}
+div#menu div#logo img
+{
+	width:100px;
+}
+div#menu ul
+{
+	display: inline;
+	list-style:none;
+}
+div#menu ul li
+{
+	display:inline;
+	text-decoration:none;
+	margin-left:50px;
+	padding:100px;
+}
+div#mainbody 
+{
+	width:1100px;
+	margin-left:100px;
+	background-color:white;
+	border-width:1px;
+	border-style:solid;
+	border-color:#444444;
+	padding:10px;
+	font-weight:bold;
+	color:#000000;
+	text-decoration:none;
+}
+div#mainbody div.content
+{
+	width:1100px;
+	height:400px;
+	background-color:gray;
+	border-width:1px;
+	border-style:solid;
+	border-color:#444444;
+	font-weight:bold;
+	color:#000000;
+	text-decoration:none;
+	margin-bottom:10px;
+	position: relative;
+}
+div#mainbody div.content .linkContent
+{
+	margin-left:50%;
+	position: absolute;
+   	top: 50%;      
+   	transform: translate(0, -50%);
+	
+}
+table
+{
+	font-family: 'Play', sans-serif;
+	margin-left:20%;
+}
+
+table td
+{
+	background-color: #D21309;
+
+}
+table #divPlays
+{
+	background-color: #CCC;
+	padding: 5px 10px 5px 10px;
+	border-radius: 2px;
+	margin: 10px;
+}
+
+table #divListeners
+{
+	background-color: #EEE;
+	padding: 5px 10px 5px 10px;
+	border-radius: 2px;
+	margin: 10px;
+}
+table #divTag
+{
+	background-color: #CCC;
+	padding: 5px 10px 5px 10px;
+	border-radius: 2px;
+	margin: 10px;
+	display: block;
+}
+table #divDate
+{
+	background-color: #EEE;
+	padding: 5px 10px 5px 10px;
+	border-radius: 2px;
+	margin: 10px;
+}
+table #divArtist
+{
+	background-color: white;
+	padding: 5px 10px 5px 10px;
+	border-radius: 2px;
+	margin: 10px;
+}
+table #divSong
+{
+	background-color: white;
+	padding: 30px 60px 30px 60px;
+	border-radius: 2px;
+	margin: 10px;
+}
+table #divURL
+{
+	background-color: #EEE;
+	padding: 30px 60px 30px 60px;
+	border-radius: 2px;
+	margin: 10px;
+}

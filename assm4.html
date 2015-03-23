@@ -1,0 +1,43 @@
+<HTML>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>Assessment 4</title>
+		<link type="text/css" rel="stylesheet" href="assm4.css"/>
+		<script type="text/javascript" src="assm4.js"></script>
+	</head>
+
+	<body onload="initialise();">
+		<div id="menu">
+			<div id="logo" onclick="showContents();">
+				<img src="Lastfm.jpg" alt="Logo for a cheeky website"/>
+				
+			</div>
+			<div>
+			<ul>
+				<li id="toptracks"> Top tracks </li>
+				<li id="topartists"> Top artists </li>
+				<li id="events"> Events </li>
+			</ul>
+			</div>
+		</div>
+
+		<div id="mainbody">
+			<div id="main_contents">
+				<div class="content" id="searchTracks">
+					<button class="linkContent" id="toptracksButton">Search for top tracks</button>
+					<table class="searchTable"></table>
+				</div>
+				<div class="content" id="searchArtists">
+					<button class="linkContent" id="topartistsButton">Search for top artists</button>
+					<table class="searchTable"></table>
+				</div>
+				<div class="content" id="searchEvents">
+					<button class="linkContent" id="eventsButton">Search for events</button>
+					<table class="searchTable"></table>
+				</div>
+			</div>
+			<table id="page">
+			</table>
+		</div>
+	</body>
+</HTML>
