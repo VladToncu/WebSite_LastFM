@@ -8,12 +8,25 @@ function setupAjax()
 	var menu = document.getElementById("menu");
 	var menuItems=menu.getElementsByTagName("li");
 
-	menuItems[0].onclick=function() {requestData("toptracks.json",loadtoptracks); notSearch=false;};
-	menuItems[1].onclick=function() {requestData("topartists.json",loadtopartists); notSearch=false;};
-	menuItems[2].onclick=function()	{requestData("events.xml",loadevents);};
+	menuItems[0].onclick=function() {requestData("toptracks.json",loadtoptracks); notSearch=false; doubleClickPlayCount=false;
+	doubleClickListeners=false;};
+	menuItems[1].onclick=function() {requestData("topartists.json",loadtopartists); notSearch=false; doubleClickPlayCount=false;
+	doubleClickListeners=false;};
+	menuItems[2].onclick=function()	{requestData("events.xml",loadevents); doubleClickPlayCount=false;
+	doubleClickListeners=false;};
+	
 	searchFeature();
 	
+	var actions=document.getElementById("actions");
+	actions.style.display="none";
+
+	var sortPlayCount = document.getElementById("playcount");
+	sortPlayCount.onclick = function() { sortByPlayCount(); };
+	var sortListeners = document.getElementById("listeners");
+	sortListeners.onclick = function() { sortByListeners(); };
+	
 }
+var tracksClicked=true;
 function hideContents()
 {
 	var contents=document.getElementsByClassName("content");
@@ -29,6 +42,7 @@ function showContents()
 	for(var i=0;i<contents.length;i++)
 	{
 		contents[i].style.display="block";
+		contents[i].style.height="300";
 	}
 	var table=document.getElementById("page").style.display="none";
 	var tablesSearch=document.getElementsByClassName("searchTable");
@@ -86,6 +100,8 @@ function loadtoptracks(xmlhttp)
 	// Refresh the table
 	if(notSearch==false)
 	{
+		var actions=document.getElementById("actions");
+		actions.style.display="block";
 		fillTableTopTracks();
 	}
 	else searchTrack(); 
@@ -95,6 +111,7 @@ function loadtoptracks(xmlhttp)
 // Refresh the items table using the info in the 'items' array
 function fillTableTopTracks()
 {
+	tracksClicked=true;
 	// Get the (existing) table
 	var table = document.getElementById("page");
 	
@@ -162,7 +179,7 @@ function fillTableTopTracks()
 		tr.appendChild(td2);
 		table.appendChild(trNum);
 		table.appendChild(tr);
-		
+		table.style.marginLeft="20%";
 	}
 }
 function loadtopartists(xmlhttp)
@@ -202,7 +219,8 @@ function loadtopartists(xmlhttp)
 	// Refresh the table
 	if(notSearch==false)
 	{
-
+		var actions=document.getElementById("actions");
+		actions.style.display="block";
 		fillTableTopArtists();
 	}
 	else searchArtist(); 
@@ -211,6 +229,7 @@ function loadtopartists(xmlhttp)
 // Refresh the items table using the info in the 'items' array
 function fillTableTopArtists()
 {
+	tracksClicked=false;
 	// Get the (existing) table
 	var table = document.getElementById("page");
 	
@@ -269,7 +288,7 @@ function fillTableTopArtists()
 		tr.appendChild(td2);
 		table.appendChild(trNum);
 		table.appendChild(tr);
-		
+		table.style.marginLeft="20%";
 	}
 }
 function requestData(url, callBack)
@@ -357,6 +376,8 @@ function loadevents(xmlhttp)
 		table.appendChild(tr);	
 		table.style.marginLeft="0%";
 	}
+	var actions=document.getElementById("actions");
+	actions.style.display="none";
 }
 notSearch=false;
 function searchFeature()
@@ -377,6 +398,7 @@ function searchFeature()
 function searchTrack()
 {
 	var check=false;
+	var correct=false;
 	var table=document.getElementsByClassName("searchTable")[0];
 	while (table.childNodes.length > 0) {
 		table.removeChild(table.firstChild);
@@ -389,6 +411,7 @@ function searchTrack()
 			check=true;
 		if(check==true)
 			{
+		correct=true;
 		var tr = document.createElement("tr");
 
 		var trNum = document.createElement("tr");
@@ -444,9 +467,11 @@ function searchTrack()
 		tr.appendChild(td2);
 		table.appendChild(trNum);
 		table.appendChild(tr);
+			document.getElementsByClassName("content")[0].style.height="auto";
 			}		
 	}
 	document.getElementById("toptracksButton").style.marginLeft="0%";
+
 }
 function searchArtist()
 {
@@ -511,12 +536,125 @@ function searchArtist()
 		tr.appendChild(td2);
 		table.appendChild(trNum);
 		table.appendChild(tr);
+		document.getElementsByClassName("content")[1].style.height="auto";
 		}
 	}
 		document.getElementById("topartistsButton").style.marginLeft="0%";
+		
 }
-function searchEvent()
+function searchEvent(xmlhttp)
 {
 	var check=false;
+	var table=document.getElementsByClassName("searchTable")[2];
+	while (table.childNodes.length > 0) {
+		table.removeChild(table.firstChild);
+		}
 	var searchItem=prompt();
+	var xmldoc = xmlhttp.responseXML;
+	var events = xmldoc.getElementsByTagName("event");
+	for (var i = 0; i < events.length; i++)
+	{
+		check=false;
+		//Extract basic info about each item
+		var EventArtists = events[i].getElementsByTagName("artist");
+		var EventDate=events[i].getElementsByTagName("startDate")[0];
+		var EventTags = events[i].getElementsByTagName("tag");
+		var EventURL=events[i].getElementsByTagName("url")[1];
+		// Add a row for each item
+		for(var j=0;j<EventArtists.length;j++)
+			if(EventArtists[j].firstChild.data == searchItem)
+				check=true;
+		for(var j=1;j<EventTags.length;j++)
+			if(EventTags[j].firstChild.data == searchItem)
+				check=true;
+		
+		if(searchItem==EventURL.firstChild.data || searchItem==EventDate.firstChild.data)
+			check=true;
+		if(check==true)
+		{
+		var tr = document.createElement("tr");
+
+		var td1 = document.createElement("td");
+		// Right hand cell, containing item details
+		var td2 = document.createElement("td");
+		
+		// Title
+		var divArtists = document.createElement("div");
+		divArtists.id="divArtist";
+		divArtists.innerHTML = "The artists for this event are: ";
+		for(var j=0;j<EventArtists.length;j++)
+		{	
+			if(j==0)
+				divArtists.innerHTML += "<b> <big>"+EventArtists[j].firstChild.data + "</b></big>; ";
+			else if (j==EventArtists.length-1)
+				divArtists.innerHTML += EventArtists[j].firstChild.data;
+			else
+				divArtists.innerHTML += EventArtists[j].firstChild.data + "; ";
+		}
+		td1.appendChild(divArtists);
+
+		//URL
+		var divLink = document.createElement("div");
+		divLink.id="divURL";
+		var linkEvent = document.createElement("a");
+		linkEvent.setAttribute("href", EventURL.firstChild.data);
+		linkEvent.innerHTML = "Click here for redirecting to the event page";
+		divLink.appendChild(linkEvent);
+		td2.appendChild(divLink);
+		
+		//Date
+		var divDate = document.createElement("div");
+		divDate.id="divDate";
+		divDate.innerHTML = "The date for this event is: "+EventDate.firstChild.data;
+		td1.appendChild(divDate);
+
+		//Tags
+		var divTags = document.createElement("div");
+		divTags.id="divTag";
+		divTags.innerHTML = "<b>Tags</b>: ";
+		var divTag = document.createElement("div");
+		for(var j=1;j<EventTags.length;j++)
+		{
+			divTags.innerHTML += "<br> </br>" + EventTags[j].firstChild.data;
+		}
+		td1.appendChild(divTags);
+
+		tr.appendChild(td1);
+		tr.appendChild(td2);
+		table.appendChild(tr);	
+		table.style.marginLeft="0%";
+		document.getElementsByClassName("content")[2].style.height="auto";
+		}
+	}
+	document.getElementById("eventsButton").style.marginLeft="85%";
+}
+var doubleClickPlayCount=false;
+var doubleClickListeners=false;
+function sortByPlayCount()
+{
+	if(doubleClickPlayCount==false)
+	items.sort( function(a,b) { if (a.playcount < b.playcount) return -1; else return 1; } );
+	else
+	items.sort( function(a,b) { if (a.playcount > b.playcount) return -1; else return 1; } );
+	if(tracksClicked==true)
+		fillTableTopTracks();
+	else 
+		fillTableTopArtists();
+	if(doubleClickPlayCount==false)
+		doubleClickPlayCount=true;
+	else doubleClickPlayCount=false;
+}
+function sortByListeners()
+{
+	if(doubleClickListeners==false)
+	items.sort( function(a,b) { if (a.listeners < b.listeners) return -1; else return 1; } );
+	else
+		items.sort( function(a,b) { if (a.listeners > b.listeners) return -1; else return 1; } );
+	if(tracksClicked==true)
+		fillTableTopTracks();
+	else 
+		fillTableTopArtists();
+	if(doubleClickListeners==false)
+		doubleClickListeners=true;
+	else doubleClickListeners=false;
 }
